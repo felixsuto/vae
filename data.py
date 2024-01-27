@@ -4,7 +4,6 @@ from pytorch_lightning.utilities.types import EVAL_DATALOADERS, TRAIN_DATALOADER
 import torch
 import torchvision as tv
 import pytorch_lightning as pl
-import random
 
 from torchvision import transforms as tr
 
@@ -65,17 +64,11 @@ def prepare_dataloaders(root, patch_size, batch_size, num_workers, pin_memory):
                                  tr.ToTensor()])
     
     file_list = os.listdir(root)
-    random.shuffle(file_list)
+    dataset_bounds = [162771, 182638]
 
-    train_size = int(0.7 * len(file_list))
-    val_size = int(0.15 * len(file_list))
-    test_size = len(file_list) - train_size - val_size
-    
-    train_files, val_files, test_files = torch.utils.data.random_split(file_list, [train_size, val_size, test_size])
-
-    train_dataset =  UnlabeledDataset(root, train_files, train_transforms)
-    val_dataset =  UnlabeledDataset(root, val_files, val_transforms)
-    test_dataset =  UnlabeledDataset(root, test_files, test_transforms)
+    train_dataset =  UnlabeledDataset(root, file_list[:dataset_bounds[0]], train_transforms)
+    val_dataset =  UnlabeledDataset(root, file_list[dataset_bounds[0]: dataset_bounds[1]], val_transforms)
+    test_dataset =  UnlabeledDataset(root, file_list[dataset_bounds[1]:], test_transforms)
     
     train_loader = torch.utils.data.DataLoader(train_dataset,
                                                batch_size=batch_size,
