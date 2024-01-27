@@ -21,47 +21,18 @@ class UnlabeledDataset(torch.utils.data.Dataset):
         if self.transform is not None:
             img = self.transform(img)
         return img
-    
-class DataModule(pl.LightningDataModule):
-    
-    def __init__(self, root, patch_size, batch_size, num_workers, pin_memory):
-        super().__init__()
-        self.root = root
-        self.patch_size = patch_size
-        self.batch_size = batch_size
-        self.num_workers = num_workers
-        self.pin_memory = pin_memory
-
-    def setup(self):
-        self.train_loader, self.val_loader, self.test_loader = prepare_dataloaders(root=self.root,
-                                                                         patch_size=self.patch_size,
-                                                                         batch_size=self.batch_size,
-                                                                         num_workers=self.num_workers,
-                                                                         pin_memory=self.pin_memory)
-    
-    def train_dataloader(self):
-        return self.train_loaer
-    
-    def val_dataloader(self):
-        return self.val_loader
-    
-    def test_dataloader(self):
-        return self.test_loader
          
 def prepare_dataloaders(root, patch_size, batch_size, num_workers, pin_memory):
 
     train_transforms = tr.Compose([tr.RandomHorizontalFlip(),
                                    tr.CenterCrop(148),
-                                   tr.Resize(patch_size),
-                                   tr.ToTensor()])
+                                   tr.Resize(patch_size)])
     
     val_transforms = tr.Compose([tr.CenterCrop(148),
-                                 tr.Resize(patch_size),
-                                 tr.ToTensor()])
+                                 tr.Resize(patch_size)])
     
     test_transforms = tr.Compose([tr.CenterCrop(148),
-                                 tr.Resize(patch_size),
-                                 tr.ToTensor()])
+                                 tr.Resize(patch_size)])
     
     file_list = os.listdir(root)
     dataset_bounds = [162771, 182638]

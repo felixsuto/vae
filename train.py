@@ -7,30 +7,29 @@ import numpy as np
 import pytorch_lightning as pl
 
 from data import DataModule
+from vae_experiment import VAEExperiment
 
 from pathlib import Path
-from experiment import VAEXperiment
 from dataset import VAEDataset
+
 from models.vanilla_vae import VanillaVAE
 from models.hvae import HVAE
+from models.lvae import LVAE
 
 vae_models = {'VanillaVAE': VanillaVAE,
-              'HVAE': HVAE }
+              'HVAE': HVAE,
+              'LVAE': LVAE }
 
 def main(config):
     # seed for reproducibility
-    pl.utilities.seed.seed_everything(seed=config['seed'])
+    #pl.utilities.seed.seed_everything(seed=config['seed'])
 
     # logging
     tb_logger = pl.loggers.TensorBoardLogger(save_dir=config['logging_params']['save_dir'],
                                              name=config['model_params']['name'])
     
     # data
-    data = DataModule(root=config['data_params']['root'],
-                      batch_size=config['data_params']['batch_size'],
-                      num_workers=config['data_params']['num_workers'],
-                      pin_memory=config['trainer_params']['gpus'] != 0,
-                      patch_size=config['data_params']['patch_size'])
+    data = VAEDataset(**config["data_params"], pin_memory=False)
     data.setup()
 
     # model
@@ -43,10 +42,10 @@ def main(config):
                                                                  dirpath =os.path.join(tb_logger.log_dir , "checkpoints"), 
                                                                  monitor= "val_loss",
                                                                  save_last= True)],
-                         strategy=pl.plugins.DDPPlugin(find_unused_parameters=False),
+                         #strategy=pl.plugins.DDPPlugin(find_unused_parameters=False),
                          **config['trainer_params'])
     
-    experiment = VAEXperiment(model,
+    experiment = VAEExperiment(model,
                           config['exp_params'])
     
     Path(f"{tb_logger.log_dir}/Samples").mkdir(exist_ok=True, parents=True)
@@ -54,7 +53,7 @@ def main(config):
 
     # training
     print(f"======= Training {config['model_params']['name']} =======")
-    trainer.fit(model, datamodule=data)
+    trainer.fit(experiment, datamodule=data)
 
 def parse_args():
     parser = argparse.ArgumentParser(description='VAE projectwork')
