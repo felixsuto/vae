@@ -6,11 +6,11 @@ import argparse
 import numpy as np
 import pytorch_lightning as pl
 
-from data import DataModule
 from vae_experiment import VAEExperiment
+from data import CelebAModule
 
 from pathlib import Path
-from dataset import VAEDataset
+#from dataset import VAEDataset
 
 from models.vanilla_vae import VanillaVAE
 from models.hvae import HVAE
@@ -29,7 +29,7 @@ def main(config):
                                              name=config['model_params']['name'])
     
     # data
-    data = VAEDataset(**config["data_params"], pin_memory=False)
+    data = CelebAModule(**config["data_params"], pin_memory=False)
     data.setup()
 
     # model
@@ -42,7 +42,6 @@ def main(config):
                                                                  dirpath =os.path.join(tb_logger.log_dir , "checkpoints"), 
                                                                  monitor= "val_loss",
                                                                  save_last= True)],
-                         #strategy=pl.plugins.DDPPlugin(find_unused_parameters=False),
                          **config['trainer_params'])
     
     experiment = VAEExperiment(model,
