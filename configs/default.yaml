@@ -21,6 +21,6 @@ exp_params:
 trainer_params:
   max_epochs: 10
   patience: 2
-  best_path: "./logs/hvae0/best"
+  best_path: "./logs/hvae/best"
   kld_weight: 0.00025
-  save_dir: "./logs/hvae0/"
+  save_dir: "./logs/hvae/"

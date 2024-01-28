@@ -95,7 +95,7 @@ def parse_args():
                     dest="filename",
                     metavar='FILE',
                     help =  'path to the config file',
-                    default='default.yaml')
+                    default='configs/default.yaml')
     args = parser.parse_args()
 
     with open(args.filename, 'r') as file:
