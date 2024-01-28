@@ -90,20 +90,20 @@ class CelebAModule(pl.LightningDataModule):
         train_transforms = tr.Compose([tr.RandomHorizontalFlip(),
                                        tr.CenterCrop(148),
                                        tr.Resize(self.patch_size),
-                                       tr.ToTensor(),
-                                       tr.Normalize(mean=[0.5063, 0.4258, 0.3832], std=[0.2661, 0.2452, 0.2414]),
+                                       #tr.ToTensor(),
+                                       #tr.Normalize(mean=[0.5063, 0.4258, 0.3832], std=[0.2661, 0.2452, 0.2414]),
                                        ])
             
         val_transforms = tr.Compose([tr.CenterCrop(148),
                                      tr.Resize(self.patch_size),
-                                     tr.ToTensor(),
-                                     tr.Normalize(mean=[0.5063, 0.4258, 0.3832], std=[0.2661, 0.2452, 0.2414]),
+                                     #tr.ToTensor(),
+                                     #tr.Normalize(mean=[0.5063, 0.4258, 0.3832], std=[0.2661, 0.2452, 0.2414]),
                                      ])
             
         test_transforms = tr.Compose([tr.CenterCrop(148),
                                       tr.Resize(self.patch_size),
-                                      tr.ToTensor(),
-                                      tr.Normalize(mean=[0.5063, 0.4258, 0.3832], std=[0.2661, 0.2452, 0.2414]),
+                                      #tr.ToTensor(),
+                                      #tr.Normalize(mean=[0.5063, 0.4258, 0.3832], std=[0.2661, 0.2452, 0.2414]),
                                       ])
             
         self.train_dataset = CelebAWrapper(self.data_dir,
