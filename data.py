@@ -87,20 +87,23 @@ class CelebAModule(pl.LightningDataModule):
         self.pin_memory = pin_memory
         
     def setup(self, stage: Optional[str] = None) -> None:
-        train_transforms = tr.Compose([tr.RandomHorizontalFlip(),
+        train_transforms = tr.Compose([tr.ToTensor(),
+                                       tr.RandomHorizontalFlip(),
                                        tr.CenterCrop(148),
                                        tr.Resize(self.patch_size),
                                        #tr.ToTensor(),
                                        #tr.Normalize(mean=[0.5063, 0.4258, 0.3832], std=[0.2661, 0.2452, 0.2414]),
                                        ])
             
-        val_transforms = tr.Compose([tr.CenterCrop(148),
+        val_transforms = tr.Compose([tr.ToTensor(),
+                                     tr.CenterCrop(148),
                                      tr.Resize(self.patch_size),
                                      #tr.ToTensor(),
                                      #tr.Normalize(mean=[0.5063, 0.4258, 0.3832], std=[0.2661, 0.2452, 0.2414]),
                                      ])
             
-        test_transforms = tr.Compose([tr.CenterCrop(148),
+        test_transforms = tr.Compose([tr.ToTensor(),
+                                      tr.CenterCrop(148),
                                       tr.Resize(self.patch_size),
                                       #tr.ToTensor(),
                                       #tr.Normalize(mean=[0.5063, 0.4258, 0.3832], std=[0.2661, 0.2452, 0.2414]),
